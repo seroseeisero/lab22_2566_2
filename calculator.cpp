@@ -1,10 +1,83 @@
 #include <windows.h>
-
+#include <stdio.h>
 /* This is where all the input to the window goes to */
+char input1[28];
+char input2[28];
+HWND textfield,plusBtn,minusBtn,multiplyBtn,divisionBtn,textBox1,textBox2;
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
 	switch(Message) {
 		
 		/* Upon destruction, tell the main thread to stop */
+		case WM_CREATE: {
+			textfield = CreateWindow("STATIC","Please input two numbers ",WS_VISIBLE | WS_CHILD ,20,20,200,25,hwnd,NULL,NULL,NULL);
+			
+			plusBtn = CreateWindow("BUTTON","+",WS_VISIBLE|WS_CHILD |WS_BORDER,
+			40,110,20,20,
+			hwnd,(HMENU) 1,NULL,NULL);
+
+			minusBtn = CreateWindow("BUTTON","-",WS_VISIBLE|WS_CHILD |WS_BORDER,
+			80,110,20,20,
+			hwnd,(HMENU) 2,NULL,NULL);
+
+			multiplyBtn = CreateWindow("BUTTON","*",WS_VISIBLE|WS_CHILD |WS_BORDER,
+			120,110,20,20,
+			hwnd,(HMENU) 3,NULL,NULL);
+
+			divisionBtn = CreateWindow("BUTTON","/",WS_VISIBLE|WS_CHILD |WS_BORDER,
+			160,110,20,20,
+			hwnd,(HMENU) 4,NULL,NULL);
+
+			textBox1 = CreateWindow("EDIT"," ",WS_VISIBLE|WS_CHILD |WS_BORDER,
+			20,50,200,25,
+			hwnd,NULL,NULL,NULL);
+
+			textBox2 = CreateWindow("EDIT"," ",WS_VISIBLE|WS_CHILD |WS_BORDER,
+			20,80,200,25,
+			hwnd,NULL,NULL,NULL);
+			break;
+
+		}
+		case WM_COMMAND:{
+			switch(LOWORD(wParam)){
+				case 1:{
+					float ip1,ip2;
+					ip1 = GetWindowText(textBox1,&input1[0],28);
+					ip2 = GetWindowText(textBox2,&input2[0],28);
+					char ans[10] ;
+					sprintf(ans, "%f", atof(input1)+atof(input2) );
+					::MessageBox( hwnd,ans,"answer",MB_OK);
+					break;
+				}
+				case 2:{
+					float ip1,ip2;
+					ip1 = GetWindowText(textBox1,&input1[0],28);
+					ip2 = GetWindowText(textBox2,&input2[0],28);
+					char ans[10] ;
+					sprintf(ans, "%f", atof(input1)-atof(input2) );
+					::MessageBox( hwnd,ans,"answer",MB_OK);
+					break;
+				}
+				case 3:{
+					float ip1,ip2;
+					ip1 = GetWindowText(textBox1,&input1[0],28);
+					ip2 = GetWindowText(textBox2,&input2[0],28);
+					char ans[10] ;
+					sprintf(ans, "%f", atof(input1)*atof(input2) );
+					::MessageBox( hwnd,ans,"answer",MB_OK);
+					break;
+				}
+				case 4:{
+					float ip1,ip2;
+					ip1 = GetWindowText(textBox1,&input1[0],28);
+					ip2 = GetWindowText(textBox2,&input2[0],28);
+					char ans[10] ;
+					sprintf(ans, "%f", atof(input1)/atof(input2) );
+					::MessageBox( hwnd,ans,"answer",MB_OK);
+					break;
+				}
+			}
+			break;
+		}
 		case WM_DESTROY: {
 			PostQuitMessage(0);
 			break;
@@ -31,7 +104,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wc.hCursor	 = LoadCursor(NULL, IDC_ARROW);
 	
 	/* White, COLOR_WINDOW is just a #define for a system color, try Ctrl+Clicking it */
-	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+22);
 	wc.lpszClassName = "WindowClass";
 	wc.hIcon	 = LoadIcon(NULL, IDI_APPLICATION); /* Load a standard icon */
 	wc.hIconSm	 = LoadIcon(NULL, IDI_APPLICATION); /* use the name "A" to use the project icon */
@@ -41,11 +114,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 0;
 	}
 
-	hwnd = CreateWindowEx(WS_EX_CLIENTEDGE,"WindowClass","Caption",WS_VISIBLE|WS_OVERLAPPEDWINDOW,
+	hwnd = CreateWindowEx(WS_EX_CLIENTEDGE,"WindowClass","My Calculator",WS_VISIBLE | WS_SYSMENU,
 		CW_USEDEFAULT, /* x */
 		CW_USEDEFAULT, /* y */
-		640, /* width */
-		480, /* height */
+		250, /* width */
+		200, /* height */
 		NULL,NULL,hInstance,NULL);
 
 	if(hwnd == NULL) {
